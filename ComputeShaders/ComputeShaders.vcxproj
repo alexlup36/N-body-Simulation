@@ -148,6 +148,7 @@
     <ClCompile Include="SDLInit.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderMan.cpp" />
+    <ClCompile Include="TextMan.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="Triangle.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="SDLInit.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderMan.h" />
+    <ClInclude Include="TextMan.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="Triangle.h" />

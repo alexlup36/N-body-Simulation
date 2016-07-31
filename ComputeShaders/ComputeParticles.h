@@ -17,6 +17,16 @@ public:
 		GLuint computeParticleProgram,
 		GLuint renderParticleProgram);
 
+	inline static const int GetParticleCount()
+	{
+		return PARTICLE_COUNT;
+	}
+
+	inline static const int GetAttractorCount()
+	{
+		return ATTRACTORS_COUNT;
+	}
+
 private:
 
 	inline const float random() const { return (float)((double)rand() / (RAND_MAX)); }

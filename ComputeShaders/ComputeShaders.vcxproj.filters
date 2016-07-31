@@ -90,6 +90,9 @@
     <ClCompile Include="ComputeParticles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TextMan.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -159,6 +162,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CameraMan.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="TextMan.h">
       <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>

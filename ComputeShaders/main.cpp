@@ -20,9 +20,15 @@
 #include "DebugOutput.h"
 #include "Texture.h"
 #include "ComputeParticles.h"
+#include "TextMan.h"
 
 #include "Triangle.h"
 #include "Quad.h"
+
+// ----------------------------------------------------------------------------
+// Forward declaration
+
+void printStats(WindowInfo* window, ShaderMan* shaderMan, TextMan* textMan, float dt);
 
 // ----------------------------------------------------------------------------
 
@@ -85,17 +91,17 @@ int main(int argc, char* argv[])
 	context.MajorVersion = 4;
 	context.MinorVersion = 4;
 
-	WindowInfo window;
-	memset(&window, 0, sizeof(WindowInfo));
-	window.AllowReshape = true;
+	WindowInfo windowInf;
+	memset(&windowInf, 0, sizeof(WindowInfo));
+	windowInf.AllowReshape = true;
 #ifdef X_FULLSCREEN
-	window.FullScreen = false;
+	windowInf.FullScreen = false;
 #endif // X_FULLSCREEN
-	window.WindowPosX = 100;
-	window.WindowPosY = 100;
-	window.WindowWidth = WINDOW_WIDTH;
-	window.WindowHeight = WINDOW_HEIGHT;
-	window.WindowName = "RenderingEngine";
+	windowInf.WindowPosX = 100;
+	windowInf.WindowPosY = 100;
+	windowInf.WindowWidth = WINDOW_WIDTH;
+	windowInf.WindowHeight = WINDOW_HEIGHT;
+	windowInf.WindowName = "RenderingEngine";
 
 	FrameBufferInfo frameBuffer;
 	memset(&frameBuffer, 0, sizeof(FrameBufferInfo));
@@ -112,7 +118,7 @@ int main(int argc, char* argv[])
 
 	// ------------------------------------------------------------------------
 	// Initialization and main loop
-	if (!SDLInit::Init(context, window, frameBuffer))
+	if (!SDLInit::Init(context, windowInf, frameBuffer))
 	{
 		printf("Failed to initialize SDL\n");
 		return -1;
@@ -132,9 +138,15 @@ int main(int argc, char* argv[])
 		// ------------------------------------------------------------------------
 		
 		// Managers
-		std::shared_ptr<ShaderMan> shaderManager = std::make_shared<ShaderMan>();
-		std::shared_ptr<MeshManager> meshManager = nullptr;
-		std::shared_ptr<CameraMan> cameraManager = std::make_shared<CameraMan>();
+		std::shared_ptr<ShaderMan> shaderManager	= std::make_shared<ShaderMan>();
+		std::shared_ptr<MeshManager> meshManager	= nullptr;
+		std::shared_ptr<CameraMan> cameraManager	= std::make_shared<CameraMan>();
+		std::shared_ptr<TextMan> textManager		= std::make_shared<TextMan>();
+
+		// ------------------------------------------------------------------------
+		// Initialize text manager
+		// ------------------------------------------------------------------------
+		textManager->Initialize(shaderManager.get(), "Holstein.tga");
 
 		// ------------------------------------------------------------------------
 		// Initialize shaders
@@ -362,10 +374,6 @@ int main(int argc, char* argv[])
 			{
 				// Get the initial value for the counter
 				prevTimeStamp = SDL_GetPerformanceCounter();
-				// Get the current time stamp
-				Uint64 currentTimeStamp = SDL_GetPerformanceCounter();
-				// Calculate the time difference between the two measurements
-				dt = (currentTimeStamp - prevTimeStamp) * secondPerCount;
 
 				// While there are pending events
 				while (SDL_PollEvent(&e) != 0)
@@ -390,6 +398,8 @@ int main(int argc, char* argv[])
 					shaderManager->GetShader("ComputeParticleShader"),
 					shaderManager->GetShader("RenderParticlesShader"));
 
+				printStats(&windowInf, shaderManager.get(), textManager.get(), dt);
+					
 				check_gl_error();
 
 				// No events to handle => do the rendering
@@ -397,6 +407,11 @@ int main(int argc, char* argv[])
 				//pTriangle->Draw(cameraManager->GetActiveCamera());
 				//pQuad->Draw(cameraManager->GetActiveCamera());
 				//pQuadFullScreen->Draw(cameraManager->GetActiveCamera());
+
+				// Get the current time stamp
+				Uint64 currentTimeStamp = SDL_GetPerformanceCounter();
+				// Calculate the time difference between the two measurements
+				dt = (currentTimeStamp - prevTimeStamp) * secondPerCount;
 
 				// Update the previous time stamp
 				prevTimeStamp = currentTimeStamp;
@@ -411,6 +426,27 @@ int main(int argc, char* argv[])
 	}
 
 	return 0;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void printStats(WindowInfo* window, ShaderMan* shaderMan, TextMan* textMan, float dt)
+{
+	int iTopOffset = 10;
+	int iLeftOffset = 10;
+	int iSpaceBetweenLines = 5;
+	int iFontSize = 10;
+
+	std::string sFPS = "FPS: " + std::to_string(1.0f / dt);
+	std::string sFrameTime = "Frame Time: " + std::to_string(1000.0f * dt);
+	std::string sParticles = "Particles: " + std::to_string(ComputeParticles::GetParticleCount());
+	std::string sAttractors = "Attractor: " + std::to_string(ComputeParticles::GetAttractorCount());
+
+	textMan->PrintText(shaderMan, sFPS.c_str(), iLeftOffset, 580 - iTopOffset, iFontSize);
+	textMan->PrintText(shaderMan, sFrameTime.c_str(), iLeftOffset, 580 - iTopOffset - iFontSize - iSpaceBetweenLines, iFontSize);
+	textMan->PrintText(shaderMan, sParticles.c_str(), iLeftOffset, 580 - iTopOffset - 2 * iFontSize - 2 * iSpaceBetweenLines, iFontSize);
+	textMan->PrintText(shaderMan, sAttractors.c_str(), iLeftOffset, 580 - iTopOffset - 3 * iFontSize - 3 * iSpaceBetweenLines, iFontSize);
 }
 
 // ----------------------------------------------------------------------------
