@@ -26,11 +26,8 @@ private:
 		float res;
 		unsigned int tmp;
 		static unsigned int seed = 0xFFFF0C59;
-
 		seed *= 16807;
-
 		tmp = seed ^ (seed >> 4) ^ (seed << 15);
-
 		*((unsigned int *)&res) = (tmp >> 9) | 0x3F800000;
 
 		return (res - 1.0f);
@@ -47,7 +44,7 @@ private:
 
 	// Particle const data
 	static const int PARTICLE_GROUP_SIZE		= 128;
-	static const int PARTICLE_GROUP_COUNT		= 32000;
+	static const int PARTICLE_GROUP_COUNT		= 8000;
 	static const int PARTICLE_COUNT				= PARTICLE_GROUP_COUNT * PARTICLE_GROUP_SIZE;
 	static const int PARTICLE_DISTANCE_CENTER	= 10;
 	static const int PARTICLE_VELOCITY_MULTI	= 1;

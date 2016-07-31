@@ -2,7 +2,7 @@
 #define __COMMON_H__
 
 #define GLM_FORCE_RADIANS 1
-#define X_FULLSCREEN 1
+#define X_FULLSCREEN 0
 
 // Define resolutions for window and full screen modes
 #if X_FULLSCREEN
