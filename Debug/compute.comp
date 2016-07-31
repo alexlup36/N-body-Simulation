@@ -1,0 +1,14 @@
+#version 450 core
+
+layout (rg32f) uniform image2D diffuseSampler;
+
+layout (local_size_x = 16, local_size_y = 16) in;
+
+void main(void)
+{
+	// Compute shader
+	ivec2 storePos = ivec2(gl_GlobalInvocationID.xy);
+
+	// Store at storePos in destTex
+	imageStore(diffuseSampler, storePos, vec4(100.0f / storePos.x, 0.0f, 0.0f, 0.0f));
+}
