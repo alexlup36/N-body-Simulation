@@ -39,7 +39,9 @@ bool initGL()
 	glDisable(GL_CULL_FACE);
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_BACK);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 
 #ifdef _DEBUG
 
@@ -47,8 +49,6 @@ bool initGL()
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
 
 #endif // DEBUG
-
-	//glViewport(50, 50, 300, 300);
 
 	return bSuccess;
 }
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 	memset(&window, 0, sizeof(WindowInfo));
 	window.AllowReshape = true;
 #ifdef X_FULLSCREEN
-	window.FullScreen = true;
+	window.FullScreen = false;
 #endif // X_FULLSCREEN
 	window.WindowPosX = 100;
 	window.WindowPosY = 100;
@@ -362,6 +362,10 @@ int main(int argc, char* argv[])
 			{
 				// Get the initial value for the counter
 				prevTimeStamp = SDL_GetPerformanceCounter();
+				// Get the current time stamp
+				Uint64 currentTimeStamp = SDL_GetPerformanceCounter();
+				// Calculate the time difference between the two measurements
+				dt = (currentTimeStamp - prevTimeStamp) * secondPerCount;
 
 				// While there are pending events
 				while (SDL_PollEvent(&e) != 0)
@@ -370,43 +374,35 @@ int main(int argc, char* argv[])
 					{
 						bQuit = true;
 					}
-					else
-					{
-						// Get the current time stamp
-						Uint64 currentTimeStamp = SDL_GetPerformanceCounter();
-
-						// Calculate the time difference between the two measurements
-						dt = (currentTimeStamp - prevTimeStamp) * secondPerCount;
-
-						// Clear buffers
-						glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-						// Update input
-						cameraManager->Update(dt, e);
-
-						check_gl_error();
-
-						// Draw particles
-						computeParticles->Draw(dt,
-							cameraManager->GetActiveCamera(),
-							shaderManager->GetShader("ComputeParticleShader"),
-							shaderManager->GetShader("RenderParticlesShader"));
-
-						check_gl_error();
-
-						// No events to handle => do the rendering
-						//render(*meshManager, *cameraManager);
-						//pTriangle->Draw(cameraManager->GetActiveCamera());
-						//pQuad->Draw(cameraManager->GetActiveCamera());
-						//pQuadFullScreen->Draw(cameraManager->GetActiveCamera());
-
-						// Update the previous time stamp
-						prevTimeStamp = currentTimeStamp;
-
-						// Update screen
-						SDL_GL_SwapWindow(window);
-					}
 				}
+
+				// Clear buffers
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+				// Update input
+				cameraManager->Update(dt, e);
+
+				check_gl_error();
+
+				// Draw particles
+				computeParticles->Draw(dt,
+					cameraManager->GetActiveCamera(),
+					shaderManager->GetShader("ComputeParticleShader"),
+					shaderManager->GetShader("RenderParticlesShader"));
+
+				check_gl_error();
+
+				// No events to handle => do the rendering
+				//render(*meshManager, *cameraManager);
+				//pTriangle->Draw(cameraManager->GetActiveCamera());
+				//pQuad->Draw(cameraManager->GetActiveCamera());
+				//pQuadFullScreen->Draw(cameraManager->GetActiveCamera());
+
+				// Update the previous time stamp
+				prevTimeStamp = currentTimeStamp;
+
+				// Update screen
+				SDL_GL_SwapWindow(window);
 			}
 
 			// Disable text input
