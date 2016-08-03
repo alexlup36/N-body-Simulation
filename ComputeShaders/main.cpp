@@ -382,13 +382,15 @@ int main(int argc, char* argv[])
 					{
 						bQuit = true;
 					}
+					else
+					{
+						// Update input
+						cameraManager->Update(dt, e);
+					}
 				}
 
 				// Clear buffers
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-				// Update input
-				cameraManager->Update(dt, e);
 
 				check_gl_error();
 
