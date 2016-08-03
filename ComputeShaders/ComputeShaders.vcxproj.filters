@@ -199,5 +199,11 @@
     <None Include="computeParticles.comp">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="textRenderingShader.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="textRenderingShader.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

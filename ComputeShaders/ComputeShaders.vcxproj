@@ -189,6 +189,8 @@
     <None Include="solidColorQuadShader.vert" />
     <None Include="solidColorTriangleShader.frag" />
     <None Include="solidColorTriangleShader.vert" />
+    <None Include="textRenderingShader.frag" />
+    <None Include="textRenderingShader.vert" />
     <None Include="textureQuadShader.frag" />
     <None Include="textureQuadShader.vert" />
   </ItemGroup>
